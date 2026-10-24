@@ -79,6 +79,32 @@
     });
   }
 
+  const duck = document.querySelector('.duck-button');
+  if (duck) {
+    const clip = document.querySelector('.microduck-clip');
+    const status = document.querySelector('.duck-status');
+    duck.hidden = false;
+    duck.addEventListener('click', async () => {
+      if (!clip.paused) {
+        clip.pause();
+        duck.textContent = 'Continue';
+        return;
+      }
+      try {
+        if (clip.ended) clip.currentTime = 0;
+        await clip.play();
+        duck.textContent = 'Pause';
+        status.textContent = 'Hello there.';
+      } catch {
+        status.textContent = 'The duck is taking a break. Try again in a moment.';
+      }
+    });
+    clip.addEventListener('ended', () => {
+      duck.textContent = 'Say hello again';
+      status.textContent = 'Thanks for stopping by.';
+    });
+  }
+
   const demos = {
     M3AWN9dTlrI: { image: 'robot-pet-preview.jpg', label: 'Robot pet in MuJoCo simulation' },
     icpEim1LvgI: { image: 'assistive-robot-preview.jpg', label: 'Multimodal assistive robot demonstration' }
@@ -109,6 +135,9 @@
     const fallback = document.createElement('a');
     fallback.className = 'demo-fallback';
     fallback.href = link.href;
+    fallback.target = '_blank';
+    fallback.rel = 'noopener noreferrer';
+    fallback.title = 'Opens in a new tab';
     fallback.textContent = 'Watch on YouTube ↗';
     button.addEventListener('click', () => {
       const frame = document.createElement('iframe');
